@@ -29,7 +29,7 @@ public class OneTimePasswordController {
 		return (int) Math.floor(Math.random()*(max-min+1)+min);
 	}
 
-	@GetMapping("/otp/create/{id}")
+	@GetMapping("/otp/create/{id}") //Create a OTP with the default expiry value
 	public @ResponseBody OneTimePassword getOTP(@PathVariable Integer id) {
 		log.info("{} getOTP request received with id = {}", OneTimePasswordController.class.getName(),id );
 		OneTimePassword otp = new OneTimePassword();
@@ -41,6 +41,22 @@ public class OneTimePasswordController {
 		otp.setId(id);
 		otp.setCode(generateCode());
 		otp.setExpires(new Date(System.currentTimeMillis()+expiryInterval));
+		oneTimePasswordRepository.save(otp);
+		return otp;
+	}
+
+	@GetMapping("/otp/create/{id}/{lifetime}") //Create a OTP with a custom expiry value
+	public @ResponseBody OneTimePassword getOTPWithLifetime(@PathVariable Integer id,@PathVariable Long lifetime) {
+		log.info("{} getOTP request received with id = {}", OneTimePasswordController.class.getName(),id );
+		OneTimePassword otp = new OneTimePassword();
+		//delete existing OTP if it exists
+		oneTimePasswordRepository.findById(id)
+		.ifPresent( entity -> 
+			oneTimePasswordRepository.delete(entity)
+		);
+		otp.setId(id);
+		otp.setCode(generateCode());
+		otp.setExpires(new Date(System.currentTimeMillis()+lifetime));
 		oneTimePasswordRepository.save(otp);
 		return otp;
 	}
