@@ -17,7 +17,7 @@ public class ScheduledTasks {
 	@Autowired
 	OneTimePasswordRepository oneTimePasswordRepository;
 
-	@Scheduled(fixedDelay = 5000) // Every 5 seconds
+	@Scheduled(fixedDelayString = "${scheduler.clean.otpdb}")
 	public void cleanUpOtpTable() {
 		log.info("OTP table cleanup : commencing");
 		long count = oneTimePasswordRepository.count();

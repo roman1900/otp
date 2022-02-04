@@ -19,7 +19,7 @@ This code has a default expiry of 5 minutes.
 
 ### GET /opt/create/{id}/{lifetime}  
 
-Pass an id and a custom lifetime to the service and receive back a OTP code in JSON as above.
+Pass an id and a custom lifetime to the service and receive back a OTP code in JSON as above.  
 The lifetime should be the time in milliseconds that the code will be valid for. eg. 60000 is 1 minute.
 
 ### POST /opt/verify  
@@ -35,4 +35,8 @@ Accepts a json encoded body in the following format:
   
  Returns a string response indicating failed or ok.
 
+## Cron
 
+The one time password table is cleaned of expired codes using a scheduled task. The application property  
+`scheduler.clean.otpdb` identifies the time between running the task in milliseconds. If set as default to  
+10 seconds.
