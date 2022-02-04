@@ -65,8 +65,10 @@ public class OneTimePasswordController {
 	public @ResponseBody String verifyOTP(@RequestBody OneTimePassword oneTimePassword) {
 		oneTimePasswordRepository.findByIdAndCode(oneTimePassword.getId(),oneTimePassword.getCode())
 			.ifPresentOrElse(c -> {
-				oneTimePasswordRepository.deleteById(oneTimePassword.getId());
-				verificationResult="ok";}, 
+				if (c.getExpires().before(new Date())) verificationResult="failed"; //Already Expired
+				else verificationResult="ok";
+				oneTimePasswordRepository.delete(c);
+				}, 
 							() -> {
 				verificationResult="failed";} );
 		return verificationResult;
