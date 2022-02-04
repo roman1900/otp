@@ -6,7 +6,8 @@ application.properties holds your configuration settings.
 
 ### GET /opt/create/{id}  
 
-Pass an id to the service and receive back a OTP code in JSON eg.  
+Pass an id to the service and receive back a OTP code in JSON as below.  
+This code has a default expiry of 5 minutes.
     
   ```
   {
@@ -15,7 +16,12 @@ Pass an id to the service and receive back a OTP code in JSON eg.
     "expires": "2022-02-04T02:25:39.596+00:00"  
   }
  ```
-  
+
+### GET /opt/create/{id}/{lifetime}  
+
+Pass an id and a custom lifetime to the service and receive back a OTP code in JSON as above.
+The lifetime should be the time in milliseconds that the code will be valid for. eg. 60000 is 1 minute.
+
 ### POST /opt/verify  
 
 Accepts a json encoded body in the following format:  
